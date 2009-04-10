@@ -1,0 +1,11 @@
+Method           |Title                            |Result
+-----------------|---------------------------------|---------------------------------------
+AUTOMATIC        |via exec_hostname_fqdn           |lust.internal.schools.net.au
+exec_hostname    |Execute "hostname"               |lust
+exec_hostname_fqd|Execute "hostname --fqdn"        |lust.internal.schools.net.au
+gethostbyname    |Get Host by Name                 |
+ip               |Network Socket IP then Hostname v|192.168.3.40
+network          |Network Socket hostname (not DNS)|lust.internal.schools.net.au
+uname            |POSIX::unae                      |lust
+win32_registry1  |WIN32 Registry                   |
+win32_registry2  |WIN32 Registry                   |

@@ -1,0 +1,675 @@
+From: "Graeme Cross" <gcross@alphalink.com.au>
+Date: 20 March 2004 14:25:24 GMT+11:00
+To: "Scott Penrose" <scottp@dd.com.au>
+Subject: Re: Can you please test my Module Sys::Hostname::Long
+
+On Thu, 18 Mar 2004 14:53:27 +1100, "Scott Penrose" <scottp@dd.com.au>
+said:
+
+I am about to release a new version of my Sys::Hostname::Long.
+It has many new ways of detecting the long hostname.
+
+Can anyone (particularly on anything not Debian/Linux or MacOSX) please 
+try running this, and also run the test script - testall.pl and give me 
+the results, including the machine type, os, version etc.
+
+Hi Scott.
+
+Run 1: perl 5.8.0, cygwin, Windows 2000 (SP4)
+
+$ perl testall.pl
+Method           |Title                            |Result
+-----------------|---------------------------------|----------------------------
+AUTOMATIC        |via network                      |pekoe.vsl.com.au
+exec_hostname    |Execute "hostname"               |pekoe
+hostname: cannot set hostname; this system lacks the functionality
+exec_hostname_fqd|Execute "hostname --fqdn"        |
+gethostbyname    |Get Host by Name                 |?
+ip               |Network Socket IP then Hostname v|172.22.100.194
+network          |Network Socket hostname (not DNS)|pekoe.vsl.com.au
+uname            |POSIX::unae                      |pekoe
+win32_registry1  |WIN32 Registry                   |
+win32_registry2  |WIN32 Registry                   |
+
+Note the results for hostname and gethostbyname
+
+Run 2: perl 5.6.1, FreeBSD 4.9-STABLE
+
+gjc@orion:~/Sys-Hostname-Long-1.1$ perl testall.pl
+Method           |Title                            |Result
+-----------------|---------------------------------|--------------------------
+AUTOMATIC        |via uname                        |orion.melb.vsl.com.au
+exec_hostname    |Execute "hostname"               |orion.melb.vsl.com.au
+exec_hostname_fqd|Execute "hostname --fqdn"        |orion.melb.vsl.com.au
+gethostbyname    |Get Host by Name                 |?
+ip               |Network Socket IP then Hostname v|172.22.6.118
+network          |Network Socket hostname (not DNS)|orion.melb.vsl.com.au
+uname            |POSIX::unae                      |orion.melb.vsl.com.au
+win32_registry1  |WIN32 Registry                   |
+win32_registry2  |WIN32 Registry                   |
+
+Cheers
+Graeme
+--
+Graeme Cross <gcross@alphalink.com.au>
+
+
+From: Mike McCauley <mikem@open.com.au>
+Date: 18 March 2004 15:30:44 GMT+11:00
+To: Scott Penrose <scottp@dd.com.au>
+Subject: Re: Can you please test my Module Sys::Hostname::Long
+
+Hi Scott,
+
+here are results from linux, Windows, Solaris. Note errors on Solaris with 
+Perl 5.6.1
+
+Cheers.
+
+On Thu, 18 Mar 2004 01:53 pm, Scott Penrose wrote:
+Hey Dudes,
+
+I am about to release a new version of my Sys::Hostname::Long.
+It has many new ways of detecting the long hostname.
+
+I have made each of the individual methods - along with the automatic
+detection available to run individually - so users can specify that
+they want it via method X.
+
+Thanks to a colleague at work, I have discovered that it does not
+currently fully work on Solaris - but we are not convinced that it is
+to do with configuration or something else.
+
+Can anyone (particularly on anything not Debian/Linux or MacOSX) please
+try running this, and also run the test script - testall.pl and give me
+the results, including the machine type, os, version etc.
+
+Linux RedHat 9, intel:
+
+[mikem@zulu Sys-Hostname-Long-1.1]$ make test
+PERL_DL_NONLAZY=1 /usr/bin/perl "-MExtUtils::Command::MM" "-e" 
+"test_harness(0, 'blib/lib', 'blib/arch')" t/*.t
+t/local....Sys::Hostname::Long - Last Dispatch method = exec_hostname_fqdn at 
+lib/Sys/Hostname/Long.pm line 185.
+t/local....ok
+All tests successful.
+Files=1, Tests=1,  0 wallclock secs ( 0.05 cusr +  0.01 csys =  0.06 CPU)
+
+[mikem@zulu Sys-Hostname-Long-1.1]$ ./testall.pl
+Method           |Title                            |Result
+-----------------|---------------------------------|---------------------------------------
+AUTOMATIC        |via exec_hostname_fqdn           |zulu
+exec_hostname    |Execute "hostname"               |zulu
+exec_hostname_fqd|Execute "hostname --fqdn"        |zulu
+gethostbyname    |Get Host by Name                 |
+ip               |Network Socket IP then Hostname v|203.63.154.29
+network          |Network Socket hostname (not DNS)|zulu
+uname            |POSIX::unae                      |zulu
+win32_registry1  |WIN32 Registry                   |
+win32_registry2  |WIN32 Registry                   |
+
+
+
+Windows XP
+
+(cant make)
+perl t/local.t prints ok(1)
+
+Method           |Title                            |Result
+-----------------|---------------------------------|---------------------------------------
+AUTOMATIC        |via network                      
+|open-340oyx2832.open.com.au
+exec_hostname    |Execute "hostname"               |open-340oyx2832
+exec_hostname_fqd|Execute "hostname --fqdn"        |Option - is not valid
+gethostbyname    |Get Host by Name                 |
+ip               |Network Socket IP then Hostname v|203.63.154.196
+network          |Network Socket hostname (not 
+DNS)|open-340oyx2832.open.com.au
+uname            |POSIX::unae                      |open-340oyx2832
+win32_registry1  |WIN32 Registry                   |
+win32_registry2  |WIN32 Registry                   |
+
+Solaris 9, Sparc. Perl5.6.1
+
+oscar$ make test
+PERL_DL_NONLAZY=1 /usr/local/bin/perl -Iblib/arch -Iblib/lib 
+-I/usr/local/lib/perl5/5.6.1/sun4-solaris -I/usr/local/lib/perl5/5.6.1 -e 
+'use Test::Harness qw(&runtests $verbose); $verbose=0; runtests @ARGV;' t/*.t
+t/local.............uname: not super user
+Sys::Hostname::Long - Last Dispatch method = network at 
+lib/Sys/Hostname/Long.pm line 185.
+t/local.............ok
+All tests successful.
+Files=1, Tests=1,  3 wallclock secs ( 2.46 cusr +  0.53 csys =  2.99 CPU)
+
+oscar$ ./testall.pl
+syntax error at lib/Sys/Hostname/Long.pm line 125, near "}("
+BEGIN failed--compilation aborted at ./testall.pl line 8.
+
+
+Also - if you have a system which it does NOT detect the long host
+name, but you know a way to do it - can you please pass on some
+suggestions.
+
+Thanks heaps - here it is... Usual build instructions
+
+perl Makefile.PL
+make
+make test
+perl testall.pl
+
+Here is version 1.1 - it will be released as version 2 (since it is a
+rewrite)
+
+Scott
+
+-- 
+Mike McCauley                               mikem@open.com.au
+Open System Consultants Pty. Ltd            Unix, Perl, Motif, C++, WWW
+9 Bulbul Place Currumbin Waters QLD 4223 Australia   http://www.open.com.au
+Phone +61 7 5598-7474                       Fax   +61 7 5598-7070
+
+Radiator: the most portable, flexible and configurable RADIUS server 
+anywhere. SQL, proxy, DBM, files, LDAP, NIS+, password, NT, Emerald, 
+Platypus, Freeside, TACACS+, PAM, external, Active Directory, EAP, TLS, 
+TTLS, PEAP etc on Unix, Windows, MacOS etc.
+
+
+
+From: Stas Bekman <stas@stason.org>
+Date: 19 March 2004 7:38:54 GMT+11:00
+To: Scott Penrose <scottp@dd.com.au>
+Subject: Re: Can you please test my Module Sys::Hostname::Long
+
+Scott Penrose wrote:
+Hey Dudes,
+I am about to release a new version of my Sys::Hostname::Long.
+It has many new ways of detecting the long hostname.
+I have made each of the individual methods - along with the automatic detection available to run individually - so users can specify that they want it via method X.
+Thanks to a colleague at work, I have discovered that it does not currently fully work on Solaris - but we are not convinced that it is to do with configuration or something else.
+Can anyone (particularly on anything not Debian/Linux or MacOSX) please try running this, and also run the test script - testall.pl and give me the results, including the machine type, os, version etc.
+Also - if you have a system which it does NOT detect the long host name, but you know a way to do it - can you please pass on some suggestions.
+Thanks heaps - here it is... Usual build instructions
+perl Makefile.PL
+make
+make test
+perl testall.pl
+Here is version 1.1 - it will be released as version 2 (since it is a rewrite)
+
+here you go, Scott:
+
+/tmp/Sys-Hostname-Long-1.1> uname -a
+Linux rabbit.stason.org 2.6.3-4mdk #1 Tue Mar 2 07:26:13 CET 2004 i686 unknown unknown GNU/Linux
+/tmp/Sys-Hostname-Long-1.1> perl Makefile.PL
+Checking if your kit is complete...
+Looks good
+ Writing Makefile for Sys::Hostname::Long
+/tmp/Sys-Hostname-Long-1.1> make test
+cp testall.pl blib/lib/Sys/Hostname/testall.pl
+cp lib/Sys/Hostname/Long.pm blib/lib/Sys/Hostname/Long.pm
+PERL_DL_NONLAZY=1 /usr/bin/perl5.8.3 "-MExtUtils::Command::MM" "-e" "test_harness(0, 'blib/lib', 'blib/arch')" t/*.t
+t/local....Sys::Hostname::Long - Last Dispatch method = uname at lib/Sys/Hostname/Long.pm line 185.
+t/local....ok
+All tests successful.
+Files=1, Tests=1,  0 wallclock secs ( 0.04 cusr +  0.01 csys =  0.05 CPU)
+/tmp/Sys-Hostname-Long-1.1> perl testall.pl
+Method           |Title                            |Result
+-----------------|---------------------------------|---------------------------------------
+AUTOMATIC        |via uname                        |rabbit.stason.org
+exec_hostname    |Execute "hostname"               |rabbit.stason.org
+exec_hostname_fqd|Execute "hostname --fqdn"        |rabbit.stason.org
+gethostbyname    |Get Host by Name                 |
+ip               |Network Socket IP then Hostname v|192.168.2.101
+network          |Network Socket hostname (not DNS)|
+uname            |POSIX::unae                      |rabbit.stason.org
+win32_registry1  |WIN32 Registry                   |
+win32_registry2  |WIN32 Registry                   |
+
+
+__________________________________________________________________
+Stas Bekman            JAm_pH ------> Just Another mod_perl Hacker
+http://stason.org/     mod_perl Guide ---> http://perl.apache.org
+mailto:stas@stason.org http://use.perl.org http://apacheweek.com
+http://modperlbook.org http://apache.org   http://ticketmaster.com
+
+
+From: "Wood, Anthony non Unisys" <Anthony.Wood@au.unisys.com>
+Date: 18 March 2004 15:44:25 GMT+11:00
+To: "Scott Penrose" <scottp@dd.com.au>
+Subject: RE: Can you please test my Module Sys::Hostname::Long
+
+Hey Scott - here's the result on our HP box - sorry had to blank the IP
+address (it worked fine)
+
+regrds
+Tony
+
+
+
+[~/perl/Sys-Hostname-Long-1.1] perl testall.pl
+3:48PM
+You must be superuser to set the hostname
+Method           |Title                            |Result
+-----------------|---------------------------------|--------------------
+-------------------
+AUTOMATIC        |via network                      |melhp02
+exec_hostname    |Execute "hostname"               |melhp02
+You must be superuser to set the hostname
+exec_hostname_fqd|Execute "hostname --fqdn"        |
+gethostbyname    |Get Host by Name                 |
+ip               |Network Socket IP then Hostname v|XXX.XXX.XXX.XXX
+network          |Network Socket hostname (not DNS)|melhp02
+uname            |POSIX::unae                      |melhp02
+win32_registry1  |WIN32 Registry                   |
+win32_registry2  |WIN32 Registry                   |
+[~/perl/Sys-Hostname-Long-1.1] uname -a
+3:48PM
+HP-UX melhp02 B.11.11 U 9000/800 189901597 unlimited-user license
+[~/perl/Sys-Hostname-Long-1.1]
+
+
+
+
+-----Original Message-----
+From: owner-melbourne-pm@pm.org [mailto:owner-melbourne-pm@pm.org]On
+Behalf Of Scott Penrose
+Sent: Thursday, 18 March 2004 2:53 PM
+To: Melbourne Perl Mongers
+Subject: Can you please test my Module Sys::Hostname::Long
+
+
+Hey Dudes,
+
+I am about to release a new version of my Sys::Hostname::Long.
+It has many new ways of detecting the long hostname.
+
+I have made each of the individual methods - along with the automatic 
+detection available to run individually - so users can specify that 
+they want it via method X.
+
+Thanks to a colleague at work, I have discovered that it does not 
+currently fully work on Solaris - but we are not convinced that it is 
+to do with configuration or something else.
+
+Can anyone (particularly on anything not Debian/Linux or MacOSX) please 
+try running this, and also run the test script - testall.pl and give me 
+the results, including the machine type, os, version etc.
+
+Also - if you have a system which it does NOT detect the long host 
+name, but you know a way to do it - can you please pass on some 
+suggestions.
+
+Thanks heaps - here it is... Usual build instructions
+
+perl Makefile.PL
+make
+make test
+perl testall.pl
+
+Here is version 1.1 - it will be released as version 2 (since it is a 
+rewrite)
+
+Scott
+
+
+From: "Fox, Michael" <Michael.Fox@auspost.com.au>
+Date: 19 March 2004 8:55:10 GMT+11:00
+To: 'Scott Penrose' <scottp@dd.com.au>
+Subject: RE: Can you please test my Module Sys::Hostname::Long
+
+
+Scott,
+
+looks mostly ok on our dec/compaq/hp alpha - unix 5.1, except for hostname
+syntax(?)
+
+
+
+[foxm(8.1.7:dwhx01) /u02/devel/src/cpan_dist/modules/Sys-Hostname-Long-1.1]
+uname -a
+OSF1 hx18.hq.auspost.com.au V5.1 2650 alpha
+[foxm(8.1.7:dwhx01) /u02/devel/src/cpan_dist/modules/Sys-Hostname-Long-1.1]
+make test
+PERL_DL_NONLAZY=1 /usr/users/dwadmin/perl/bin/perl -Iblib/arch -Iblib/lib
+-I/usr/users/dwadmin/perl/lib/5.6.0/alpha-dec_osf -I/usr/u
+sers/dwadmin/perl/lib/5.6.0 -e 'use Test::Harness qw(&runtests $verbose);
+$verbose=0; runtests @ARGV;' t/*.t
+t/local.............Sys::Hostname::Long - Last Dispatch method = uname at
+lib/Sys/Hostname/Long.pm line 185.
+t/local.............ok
+
+All tests successful.
+Files=1, Tests=1,  0 wallclock secs ( 0.12 cusr +  0.03 csys =  0.15 CPU)
+[foxm(8.1.7:dwhx01) /u02/devel/src/cpan_dist/modules/Sys-Hostname-Long-1.1]
+perl testall.pl
+Format STDOUT redefined at testall.pl line 17.
+Method           |Title                            |Result
+-----------------|---------------------------------|------------------------
+---------------
+AUTOMATIC        |via uname                        |hx18.hq.auspost.com.au
+exec_hostname    |Execute "hostname"               |hx18.hq.auspost.com.au
+hostname: illegal option -- -
+exec_hostname_fqd|Execute "hostname --fqdn"        |usage: hostname [-s]
+[hostname]
+gethostbyname    |Get Host by Name                 |
+ip               |Network Socket IP then Hostname v|10.0.9.102
+network          |Network Socket hostname (not DNS)|hx18.hq.auspost.com.au
+uname            |POSIX::unae                      |hx18.hq.auspost.com.au
+win32_registry1  |WIN32 Registry                   |
+win32_registry2  |WIN32 Registry                   |
+
+Michael Fox
+
+Australia Post is committed to providing our customers with excellent service. If we can assist you in any way please telephone 13 13 18 or visit our website www.auspost.com.au.
+
+CAUTION
+
+This e-mail and any files transmitted with it are privileged and confidential information intended for the use of the addressee. The confidentiality and/or privilege in this e-mail is not waived, lost or destroyed if it has been transmitted to you in error. If you have received this e-mail in error you must (a) not disseminate, copy or take any action in reliance on it; (b) please notify Australia Post immediately by return e-mail to the sender; and (c) please delete the original e-mail.
+
+
+From: Mike McCauley <mikem@open.com.au>
+Date: 19 March 2004 10:58:06 GMT+11:00
+To: Scott Penrose <scottp@dd.com.au>
+Subject: Re: Can you please test my Module Sys::Hostname::Long
+
+Hello Scott,
+
+
+On Fri, 19 Mar 2004 07:18 am, Scott Penrose wrote:
+Thanks for the tests.
+
+Hmmm... This is not a great result damn it :-)
+
+The RedHat one only got a short hostname - not full. Although in that
+case I think it is the configuration of your box - because 'hostname
+--fqdn' should have worked, but if it did not then it is probably not
+configured correctly in /etc/hosts.
+
+Yes, the preferred hostname is just zulu.
+
+
+I will look at the Solaris one - weird - must be a Perl 5.6 vs 5.8
+thing, but I tested it on Debian Stable Perl 5.6.
+
+Windows also failed to get full name. I wonder if in that case that the
+Registry entries are incorrect.
+
+Could be.
+
+
+If I write up some more tests would you be happy to try them again for
+me ?
+
+Sure.
+
+Cheers.
+
+
+Ta
+
+Scott
+
+On 18/03/2004, at 3:30 PM, Mike McCauley wrote:
+Hi Scott,
+
+here are results from linux, Windows, Solaris. Note errors on Solaris
+with
+Perl 5.6.1
+
+Cheers.
+
+On Thu, 18 Mar 2004 01:53 pm, Scott Penrose wrote:
+Hey Dudes,
+
+I am about to release a new version of my Sys::Hostname::Long.
+It has many new ways of detecting the long hostname.
+
+I have made each of the individual methods - along with the automatic
+detection available to run individually - so users can specify that
+they want it via method X.
+
+Thanks to a colleague at work, I have discovered that it does not
+currently fully work on Solaris - but we are not convinced that it is
+to do with configuration or something else.
+
+Can anyone (particularly on anything not Debian/Linux or MacOSX)
+please
+try running this, and also run the test script - testall.pl and give
+me
+the results, including the machine type, os, version etc.
+
+Linux RedHat 9, intel:
+
+[mikem@zulu Sys-Hostname-Long-1.1]$ make test
+PERL_DL_NONLAZY=1 /usr/bin/perl "-MExtUtils::Command::MM" "-e"
+"test_harness(0, 'blib/lib', 'blib/arch')" t/*.t
+t/local....Sys::Hostname::Long - Last Dispatch method =
+exec_hostname_fqdn at
+lib/Sys/Hostname/Long.pm line 185.
+t/local....ok
+All tests successful.
+Files=1, Tests=1,  0 wallclock secs ( 0.05 cusr +  0.01 csys =  0.06
+CPU)
+
+[mikem@zulu Sys-Hostname-Long-1.1]$ ./testall.pl
+Method           |Title                            |Result
+-----------------|---------------------------------
+
+|---------------------------------------
+
+AUTOMATIC        |via exec_hostname_fqdn           |zulu
+exec_hostname    |Execute "hostname"               |zulu
+exec_hostname_fqd|Execute "hostname --fqdn"        |zulu
+gethostbyname    |Get Host by Name                 |
+ip               |Network Socket IP then Hostname v|203.63.154.29
+network          |Network Socket hostname (not DNS)|zulu
+uname            |POSIX::unae                      |zulu
+win32_registry1  |WIN32 Registry                   |
+win32_registry2  |WIN32 Registry                   |
+
+
+
+Windows XP
+
+(cant make)
+perl t/local.t prints ok(1)
+
+Method           |Title                            |Result
+-----------------|---------------------------------
+
+|---------------------------------------
+
+AUTOMATIC        |via network
+
+|open-340oyx2832.open.com.au
+
+exec_hostname    |Execute "hostname"               |open-340oyx2832
+exec_hostname_fqd|Execute "hostname --fqdn"        |Option - is not
+valid
+gethostbyname    |Get Host by Name                 |
+ip               |Network Socket IP then Hostname v|203.63.154.196
+network          |Network Socket hostname (not
+DNS)|open-340oyx2832.open.com.au
+uname            |POSIX::unae                      |open-340oyx2832
+win32_registry1  |WIN32 Registry                   |
+win32_registry2  |WIN32 Registry                   |
+
+Solaris 9, Sparc. Perl5.6.1
+
+oscar$ make test
+PERL_DL_NONLAZY=1 /usr/local/bin/perl -Iblib/arch -Iblib/lib
+-I/usr/local/lib/perl5/5.6.1/sun4-solaris -I/usr/local/lib/perl5/5.6.1
+-e
+'use Test::Harness qw(&runtests $verbose); $verbose=0; runtests
+@ARGV;' t/*.t
+t/local.............uname: not super user
+Sys::Hostname::Long - Last Dispatch method = network at
+lib/Sys/Hostname/Long.pm line 185.
+t/local.............ok
+All tests successful.
+Files=1, Tests=1,  3 wallclock secs ( 2.46 cusr +  0.53 csys =  2.99
+CPU)
+
+oscar$ ./testall.pl
+syntax error at lib/Sys/Hostname/Long.pm line 125, near "}("
+BEGIN failed--compilation aborted at ./testall.pl line 8.
+
+Also - if you have a system which it does NOT detect the long host
+name, but you know a way to do it - can you please pass on some
+suggestions.
+
+Thanks heaps - here it is... Usual build instructions
+
+perl Makefile.PL
+make
+make test
+perl testall.pl
+
+Here is version 1.1 - it will be released as version 2 (since it is a
+rewrite)
+
+Scott
+
+--
+Mike McCauley                               mikem@open.com.au
+Open System Consultants Pty. Ltd            Unix, Perl, Motif, C++, WWW
+9 Bulbul Place Currumbin Waters QLD 4223 Australia
+http://www.open.com.au
+Phone +61 7 5598-7474                       Fax   +61 7 5598-7070
+
+Radiator: the most portable, flexible and configurable RADIUS server
+anywhere. SQL, proxy, DBM, files, LDAP, NIS+, password, NT, Emerald,
+Platypus, Freeside, TACACS+, PAM, external, Active Directory, EAP, TLS,
+TTLS, PEAP etc on Unix, Windows, MacOS etc.
+
+-- 
+Mike McCauley                               mikem@open.com.au
+Open System Consultants Pty. Ltd            Unix, Perl, Motif, C++, WWW
+9 Bulbul Place Currumbin Waters QLD 4223 Australia   http://www.open.com.au
+Phone +61 7 5598-7474                       Fax   +61 7 5598-7070
+
+Radiator: the most portable, flexible and configurable RADIUS server 
+anywhere. SQL, proxy, DBM, files, LDAP, NIS+, password, NT, Emerald, 
+Platypus, Freeside, TACACS+, PAM, external, Active Directory, EAP, TLS, 
+TTLS, PEAP etc on Unix, Windows, MacOS etc.
+
+
+
+From: Paul Fenwick <pjf@perltraining.com.au>
+Date: 18 March 2004 15:35:03 GMT+11:00
+To: Scott Penrose <scottp@dd.com.au>
+Subject: Re: Can you please test my Module Sys::Hostname::Long
+
+G'day Scotty,
+
+Scott Penrose wrote:
+
+Can anyone (particularly on anything not Debian/Linux or MacOSX) please try running this, and also run the test script - testall.pl and give me the results, including the machine type, os, version etc.
+
+Results on CygWin of testall.pl are attached, as are results running under ActivePerl on Windows XP home, and a perl -V of the activestate build.
+
+All my other boxes are Debian/Linux.  ;)
+
+Enjoy,
+
+	Paul
+
+-- 
+Paul Fenwick <pjf@perltraining.com.au> | http://perltraining.com.au/
+Director of Training                   | Ph:  +61 3 9354 6001
+Perl Training Australia                | Fax: +61 3 9354 2681
+$ uname -a
+CYGWIN_NT-5.1 blueberry 1.5.7(0.109/3/2) 2004-01-30 19:32 i686 unknown unknown Cygwin
+
+pjf@blueberry /tmp/Sys-Hostname-Long-1.1
+$ perl testall.pl 
+Method           |Title                            |Result
+-----------------|---------------------------------|---------------------------------------
+AUTOMATIC        |via network                      |blueberry.perltraining.com.au
+exec_hostname    |Execute "hostname"               |blueberry
+hostname: cannot set hostname; this system lacks the functionality
+exec_hostname_fqd|Execute "hostname --fqdn"        |
+gethostbyname    |Get Host by Name                 |_
+ip               |Network Socket IP then Hostname v|210.23.138.171
+network          |Network Socket hostname (not DNS)|blueberry.perltraining.com.au
+uname            |POSIX::unae                      |blueberry
+win32_registry1  |WIN32 Registry                   |
+win32_registry2  |WIN32 Registry                   |
+
+Method           |Title                            |Result
+-----------------|---------------------------------|---------------------------------------
+AUTOMATIC        |via network                      |blueberry.perltraining.com.au
+exec_hostname    |Execute "hostname"               |blueberry
+exec_hostname_fqd|Execute "hostname --fqdn"        |Option - is not valid
+gethostbyname    |Get Host by Name                 |
+ip               |Network Socket IP then Hostname v|210.23.138.171
+network          |Network Socket hostname (not DNS)|blueberry.perltraining.com.au
+uname            |POSIX::unae                      |blueberry
+win32_registry1  |WIN32 Registry                   |
+win32_registry2  |WIN32 Registry                   |
+Summary of my perl5 (revision 5 version 8 subversion 2) configuration:
+  Platform:
+    osname=MSWin32, osvers=4.0, archname=MSWin32-x86-multi-thread
+    uname=''
+    config_args='undef'
+    hint=recommended, useposix=true, d_sigaction=undef
+    usethreads=undef use5005threads=undef useithreads=define usemultiplicity=define
+    useperlio=define d_sfio=undef uselargefiles=define usesocks=undef
+    use64bitint=undef use64bitall=undef uselongdouble=undef
+    usemymalloc=n, bincompat5005=undef
+  Compiler:
+    cc='cl', ccflags ='-nologo -Gf -W3 -MD -Zi -DNDEBUG -O1 -DWIN32 -D_CONSOLE -DNO_STRICT -DHAVE_DES_FCRYPT  -DNO_HASH_SEED -DPERL_IMPLICIT_CONTEXT -DPERL_IMPLICIT_SYS -DUSE_PERLIO -DPERL_MSVCRT_READFIX',
+    optimize='-MD -Zi -DNDEBUG -O1',
+    cppflags='-DWIN32'
+    ccversion='', gccversion='', gccosandvers=''
+    intsize=4, longsize=4, ptrsize=4, doublesize=8, byteorder=1234
+    d_longlong=undef, longlongsize=8, d_longdbl=define, longdblsize=10
+    ivtype='long', ivsize=4, nvtype='double', nvsize=8, Off_t='__int64', lseeksize=8
+    alignbytes=8, prototype=define
+  Linker and Libraries:
+    ld='link', ldflags ='-nologo -nodefaultlib -debug -opt:ref,icf  -libpath:"C:\Perl\lib\CORE"  -machine:x86'
+    libpth=C:\PROGRA~1\MICROS~3\VC98\lib
+    libs=  oldnames.lib kernel32.lib user32.lib gdi32.lib winspool.lib  comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib  netapi32.lib uuid.lib wsock32.lib mpr.lib winmm.lib  version.lib odbc32.lib odbccp32.lib msvcrt.lib
+    perllibs=  oldnames.lib kernel32.lib user32.lib gdi32.lib winspool.lib  comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib  netapi32.lib uuid.lib wsock32.lib mpr.lib winmm.lib  version.lib odbc32.lib odbccp32.lib msvcrt.lib
+    libc=msvcrt.lib, so=dll, useshrplib=yes, libperl=perl58.lib
+    gnulibc_version='undef'
+  Dynamic Linking:
+    dlsrc=dl_win32.xs, dlext=dll, d_dlsymun=undef, ccdlflags=' '
+    cccdlflags=' ', lddlflags='-dll -nologo -nodefaultlib -debug -opt:ref,icf  -libpath:"C:\Perl\lib\CORE"  -machine:x86'
+
+
+Characteristics of this binary (from libperl): 
+  Compile-time options: MULTIPLICITY USE_ITHREADS USE_LARGE_FILES PERL_IMPLICIT_CONTEXT PERL_IMPLICIT_SYS
+  Locally applied patches:
+  	ActivePerl Build 808
+  	21846 Configure gets d_u32align wrong
+  	21739 [perl #24493] install.html not working
+  	21737 Ooops. left an XXX comment in, and worse still it's a // comment
+  	21735 utf8 keys now work for tied hashes
+  	21734 Accessing unicode keys in tie hashes via hv_exists was broken
+  	21733 ext/threads/t/problem.t
+  	21732 Config::myconfig() fails under ithreads
+  	21728 Update perlhist with 5.6.2
+  	21723 Include 'SCCS' in the list of dir names ignored by installperl
+  	21718 Empty subroutine as object method segfaults in 5.8.2 (sometimes)
+  	21714 Fix bug #24380: assigning list with duplicated keys to a hash
+  	21706 [perl #24460] [DOC PATCH] the begincheck program
+  	21693 must copy changes from win32/makeifle.mk to wince/makefile.ce
+  	21691 Update the list of pumpkings in perlhist.pod
+  	21687 [PATCH 5.6.2-RC1 pod/perlhist.pod]  Updated
+  	21677 OS/2 docu
+  	21676 Bug #24407: key for shared hash got stringified into wrong pool
+  	21673 Be sure to use -fPIC not -fpic on Linux/SPARC
+  	21672 extending the hash attack test
+  	21671 Benchmark.pm cmpthese segfault
+  	21662 'make minitest' fails for op/cproto and op/pat
+  	21586 Comment that this 'optimisation' is actually a necessary fixup
+  	21548 Sync with Pod::Perldoc 3.12
+  	21540 Fix backward-compatibility issues in if.pm
+  Built under MSWin32
+  Compiled at Dec  9 2003 10:19:40
+  @INC:
+    C:/Perl/lib
+    C:/Perl/site/lib
+    .
+

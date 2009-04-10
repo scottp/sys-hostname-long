@@ -1,0 +1,5 @@
+
+I forgot to add: you should probably use the same way that Sys::Hostname does; first try 
+using syscall(), then check the system and try hostname(1). 
+
+

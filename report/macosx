@@ -1,0 +1,11 @@
+Method           |Title                            |Result
+-----------------|---------------------------------|---------------------------------------
+AUTOMATIC        |via uname                        |donald.internal.schools.net.au
+exec_hostname    |Execute "hostname"               |donald.internal.schools.net.au
+exec_hostname_fqd|Execute "hostname --fqdn"        |donald.internal.schools.net.au
+gethostbyname    |Get Host by Name                 |
+ip               |Network Socket IP then Hostname v|192.168.1.82
+network          |Network Socket hostname (not DNS)|donald.internal.schools.net.au
+uname            |POSIX::unae                      |donald.internal.schools.net.au
+win32_registry1  |WIN32 Registry                   |
+win32_registry2  |WIN32 Registry                   |

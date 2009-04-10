@@ -1,0 +1,41 @@
+
+This message about Sys-Hostname-Long was sent to you by guest <> via rt.cpan.org
+
+Full context and any attached attachments can be found at:
+<URL: https://rt.cpan.org/Ticket/Display.html?id=5492 >
+
+Sys::Hostname::Long:hostname_long() does not work as intedned on many Unix(-like) systems:
+
+  HP-UX spe191 B.11.11                                             
+  spe191> hostname
+  spe191
+  spe191> hostname --fqdn
+  You must be superuser to set the hostname
+
+  MacOS X Darwin Kernel Version 7.2.0
+  $ hostname
+  saturn
+  $ hostname --fqdn
+  saturn              
+
+  FreeBSD 4.9-STABLE          
+  ice% hostname 
+  ice          
+  ice% hostname --fqdn 
+  ice
+
+  NetBSD 1.6.2
+  whitebox$ hostname
+  whitebox
+  whitebox$ hostname --fqdn                  
+  hostname: sethostname: Operation not permitted
+
+  Solaris 8
+  slowbox$ hostname
+  slowbox
+  slowbox$ hostname --fqdn
+  uname: not super user
+
+I have no fix for this at this time.
+
+
