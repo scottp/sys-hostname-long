@@ -39,13 +39,13 @@ $VERSION = '1.4';
 		'exec' => sub {
 			return eval q{
 				use Win32::TieRegistry ( TiedHash => '%RegistryHash' );
-				$RegistryHash{'LMachine'}{'System'}{'CurrentControlSet'}{'Services'}{'VxD'}{'MSTCP'}{'Domain'}; 
+				$RegistryHash{'LMachine'}{'System'}{'CurrentControlSet'}{'Services'}{'VxD'}{'MSTCP'}{'Domain'};
 			};
 		},
 	},
 
 	'uname' => {
-		'title' => 'POSIX::unae',
+		'title' => 'POSIX::uname',
 		'description' => '',
 		'exec' => sub {
 			return eval {
@@ -63,7 +63,7 @@ $VERSION = '1.4';
 		'exec' => sub {
 			return eval q{
 				use Win32::TieRegistry ( TiedHash => '%RegistryHash' );
-				$RegistryHash{'LMachine'}{'System'}{'CurrentControlSet'}{'Services'}{'VxD'}{'MSTCP'}{'Domain'}; 
+				$RegistryHash{'LMachine'}{'System'}{'CurrentControlSet'}{'Services'}{'VxD'}{'MSTCP'}{'Domain'};
 			};
 		},
 	},
@@ -162,10 +162,10 @@ sub hostname_long {
 
 	unless ($hostlong =~ m|.*\..*|) {
 		if ($^O eq 'MacOS') {
-			# http://bumppo.net/lists/macperl/1999/03/msg00282.html 
+			# http://bumppo.net/lists/macperl/1999/03/msg00282.html
 			#	suggests that it will work (checking localhost) on both
-			#	Mac and Windows. 
-			#	Personally this makes no sense what so ever as 
+			#	Mac and Windows.
+			#	Personally this makes no sense what so ever as
 			$hostlong = dispatcher('gethostbyname');
 
 		} elsif ($^O eq 'IRIX') {	# XXX Patter match string !
@@ -185,7 +185,7 @@ sub hostname_long {
 
 		} elsif ($^O eq 'solaris') {
 			$hostlong = dispatcher('exec_hostname_domainname');
- 
+
 		} else {
 			$hostlong = dispatcher('exec_hostname_fqdn');
 		}
@@ -258,11 +258,11 @@ This is the original list of platforms tested.
 	FreeBSD		FreeBSD				OK
 
 A new list has now been compiled of all the operating systems so that I can
-individually keep informaiton on their success.
+individually keep information on their success.
 
 THIS IS IN NEED OF AN UPDATE AFTER NEXT RELEASE.
 
-=over 4 
+=over 4
 
 =item Acorn - Not yet tested
 
@@ -316,7 +316,7 @@ THIS IS IN NEED OF AN UPDATE AFTER NEXT RELEASE.
 
 =item JPerl - Not yet tested
 
-=item Linux 
+=item Linux
 
 =over 8
 
@@ -476,7 +476,7 @@ THIS IS IN NEED OF AN UPDATE AFTER NEXT RELEASE.
 
 =head2 Unix
 
-Most unix systems have trouble working out the fully quallified domain name as
+Most unix systems have trouble working out the fully qualified domain name as
 it to be configured somewhere in the system correctly. For example in most
 linux systems (debian, ?) the fully qualified name should be the first entry
 next to the ip number in /etc/hosts
