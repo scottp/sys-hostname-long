@@ -73,13 +73,16 @@ $VERSION = '1.4';
 		'description' => '',
 		'exec' => sub {
 			# Skip for Solaris, and only run as non-root
+			# Skip for darwin (Mac OS X), RT#28894
 			my $tmp;
-			if ($< == 0) {
-				$tmp = `su nobody -c "hostname --fqdn"`;
-			} else {
-				$tmp = `hostname --fqdn`;
+			if ( $^O ne 'darwin' ) {
+				if ($< == 0) {
+					$tmp = `su nobody -c "hostname --fqdn"`;
+				} else {
+					$tmp = `hostname --fqdn`;
+				}
+				$tmp =~ tr/\0\r\n//d;
 			}
-			$tmp =~ tr/\0\r\n//d;
 			return $tmp;
 		},
 	},
