@@ -9,3 +9,6 @@ Revision history for Perl extension Sys::Hostname::Long
 
 1.4   Sun Jun 26 08:14:13 2005
 	Damn... forgot something...
+
+1.5  Tue Jan 13 22:01:31 AEDT 2015
+	Improvements by Michiel Bejen <michiel.beijen@gmail.com>

@@ -512,11 +512,14 @@ Solaris
 
 =head1 AUTHOR
 
-Scott Penrose E<lt>F<scottp@dd.com.au>E<gt>
+Originally by Scott Penrose E<lt>F<scottp@dd.com.au>E<gt>
+
+Contributions: Michiel Beijen E<lt>F<michiel.beijen@gmail.com>E<gt>
+
 
 =head1 COPYRIGHT
 
-Copyright (c) 2001,2004,2005 Scott Penrose. All rights reserved.
+Copyright (c) 2001,2004,2005,2015 Scott Penrose. All rights reserved.
 This program is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
