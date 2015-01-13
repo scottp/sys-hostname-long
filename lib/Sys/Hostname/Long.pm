@@ -11,7 +11,7 @@ use Sys::Hostname;
 # Use perl < 5.6 compatible methods for now, change to 'our' soon.
 use vars qw(@EXPORT $VERSION $hostlong %dispatch $lastdispatch);
 @EXPORT  = qw/ hostname_long /;
-$VERSION = '1.4';
+$VERSION = '1.5';
 
 %dispatch = (
 
