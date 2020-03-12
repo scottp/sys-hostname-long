@@ -111,7 +111,7 @@ $VERSION = '1.5';
 					PeerPort => 2000,
 					# We don't actually want to connect
 					Proto => 'udp',
-				) or die "Faile socket - $!";
+				) or die "Failed socket - $!";
 				gethostbyaddr($s->sockaddr(), AF_INET);
 			};
 		},
@@ -130,7 +130,7 @@ $VERSION = '1.5';
 					PeerPort => 2000,
 					# We don't actually want to connect
 					Proto => 'udp',
-				) or die "Faile socket - $!";
+				) or die "Failed socket - $!";
 				$s->sockhost;
 			};
 		},
